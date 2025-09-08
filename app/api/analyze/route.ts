@@ -44,8 +44,8 @@ const ROOMS = ["Kitchen","Bathroom","Exterior","Whole-home","Other"] as const;
 
 const Address = z
   .string()
-  .transform(s => (s ?? "").replace(/\r?\n/g, " ").trim())
   .max(120, "address too long")
+  .transform(s => s.replace(/\r?\n/g, " ").trim())
   .optional()
   .default("");
 
