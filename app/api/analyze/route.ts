@@ -1,34 +1,20 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { z } from "zod";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-// --- tiny rate limit (dev/local only) ---
-const RL_LIMIT = 10;          // requests allowed
-const RL_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const redis = Redis.fromEnv();
+const ratelimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.fixedWindow(10, "1 h"), // 10/hour per IP
+  prefix: "rvw:rl",
+});
 
-// survive Next.js hot reload by storing in global
-const rlStore: Map<string, { tokens: number; reset: number }> =
-  (globalThis as any).__RENOVIEW_RL__ || new Map();
-(globalThis as any).__RENOVIEW_RL__ = rlStore;
-
-const ipFrom = (req: Request) => {
-  const h = req.headers;
-  const fwd = h.get("x-forwarded-for");
-  if (fwd) return fwd.split(",")[0].trim();
-  return h.get("x-real-ip") || "local";
-};
-
-const rlAllow = (ip: string) => {
-  const now = Date.now();
-  const rec = rlStore.get(ip);
-  if (!rec || now > rec.reset) {
-    rlStore.set(ip, { tokens: RL_LIMIT - 1, reset: now + RL_WINDOW_MS });
-    return true;
-  }
-  if (rec.tokens <= 0) return false;
-  rec.tokens -= 1;
-  return true;
-};
+const clientIp = (req: Request) =>
+  req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+  req.headers.get("x-real-ip") ??
+  "unknown";
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 const MAX_IMAGE_MB = Number(process.env.MAX_IMAGE_MB ?? 3);
@@ -89,10 +75,11 @@ const b64Bytes = (b64: string) => (b64.length * 3) / 4 - (b64.endsWith("==") ? 2
 
 // ---- Route ----
 export async function POST(req: Request) {
-  const ip = ipFrom(req);
-  if (!rlAllow(ip)) {
+  const { success, reset } = await ratelimit.limit(`analyze:${clientIp(req)}`);
+  if (!success) {
+    const secs = Math.max(0, Math.ceil((reset - Date.now()) / 1000));
     return NextResponse.json(
-      { error: "Too many requests. Try again in a minute." },
+      { error: `Too many requests. Try again in ${secs}s.` },
       { status: 429 }
     );
   }
