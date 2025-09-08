@@ -7,7 +7,7 @@ import { Redis } from "@upstash/redis";
 const redis = Redis.fromEnv();
 const ratelimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.fixedWindow(10, "1 h"), // 10/hour per IP
+  limiter: Ratelimit.fixedWindow(3, "1 h"), // 10/hour per IP
   prefix: "rvw:rl",
 });
 
