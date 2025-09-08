@@ -27,21 +27,35 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 const MAX_IMAGE_MB = Number(process.env.MAX_IMAGE_MB ?? 3);
 const ALLOWED_MIME = ["image/jpeg", "image/png", "image/webp"] as const;
 
+
 // ---- Schemas ----
-// tolerant numeric coercion (e.g., "$3,500" -> 3500)
 const toNum = (v: unknown) =>
   typeof v === "string" ? Number(v.replace(/[^0-9.\-]/g, "")) : v;
 
 const Num   = z.preprocess(toNum, z.number());
 const NumNN = z.preprocess(toNum, z.number().nonnegative());
 
+const TIMELINES = [
+  "2 - 4 weeks", "4 - 6 weeks", "6 - 8 weeks",
+  "2 - 3 months", "3 - 6 months", "6+ months",
+] as const;
+
+const ROOMS = ["Kitchen","Bathroom","Exterior","Whole-home","Other"] as const;
+
+const Address = z
+  .string()
+  .transform(s => (s ?? "").replace(/\r?\n/g, " ").trim())
+  .max(120, "address too long")
+  .optional()
+  .default("");
+
 const Req = z.object({
-  zip: z.string().regex(/^\d{5}$/),
-  address: z.string().optional().default(""),
-  homeValue: NumNN,
-  budget: NumNN,
-  timeline: z.string().min(1),
-  room: z.string().optional().default(""),
+  zip: z.string().regex(/^\d{5}$/, "ZIP must be 5 digits").refine(z => z !== "00000", "invalid ZIP"),
+  address: Address,
+  homeValue: NumNN.refine(n => n >= 40_000 && n <= 10_000_000, "homeValue out of range"),
+  budget: NumNN.refine(n => n <= 2_000_000, "budget too large"),
+  timeline: z.enum(TIMELINES),
+  room: z.enum(ROOMS).optional().default("Other"),
   photoBase64: z.string().nullable().optional(),
 });
 
@@ -72,6 +86,7 @@ const Res = z.object({
   })).default([]),
   next_steps_checklist: z.array(z.string()).default([]),
 });
+
 
 // ---- Helpers ----
 const parseDataUrl = (u: string) => {
