@@ -332,26 +332,68 @@ export default function Page() {
             <CardContent>
               {resultJson ? (() => {
                 const r = JSON.parse(resultJson);
+              
                 return (
                   <div>
                     <p style={{marginTop:0}}>{r.summary}</p>
-
+              
+                    {r.market_insights?.length > 0 && (
+                      <>
+                        <h4>Market insights</h4>
+                        <ul>{r.market_insights.map((s:string,i:number)=><li key={i}>{s}</li>)}</ul>
+                      </>
+                    )}
+              
                     <h4>Priority actions</h4>
                     <ul>
-                      {r.priority_actions.map((a:any, i:number)=>(
+                      {r.priority_actions.map((a:any,i:number)=>(
                         <li key={i}>
                           <strong>{a.title}</strong> — ${a.est_cost_range[0].toLocaleString()} - ${a.est_cost_range[1].toLocaleString()}
                           {a.roi_range_pct && ` (ROI ${a.roi_range_pct[0]}%-${a.roi_range_pct[1]}%)`}
                         </li>
                       ))}
                     </ul>
-
+              
                     <h4>Quick wins</h4>
                     <ul>
-                      {r.quick_wins.map((q:any, i:number)=>(
+                      {r.quick_wins.map((q:any,i:number)=>(
                         <li key={i}>{q.title} — ${q.est_cost.toLocaleString()}</li>
                       ))}
                     </ul>
+              
+                    {r.room_specific?.length > 0 && (
+                      <>
+                        <h4>Room-specific</h4>
+                        <ul>{r.room_specific.map((s:string,i:number)=><li key={i}>{s}</li>)}</ul>
+                      </>
+                    )}
+              
+                    {r.timeline_fit && (
+                      <>
+                        <h4>Timeline fit</h4>
+                        <p>{r.timeline_fit}</p>
+                      </>
+                    )}
+              
+                    {r.defer_or_avoid?.length > 0 && (
+                      <>
+                        <h4>Defer / avoid</h4>
+                        <ul>{r.defer_or_avoid.map((d:any,i:number)=><li key={i}><strong>{d.title}</strong> — {d.why}</li>)}</ul>
+                      </>
+                    )}
+              
+                    {r.next_steps_checklist?.length > 0 && (
+                      <>
+                        <h4>Next steps</h4>
+                        <ul>{r.next_steps_checklist.map((s:string,i:number)=><li key={i}>{s}</li>)}</ul>
+                      </>
+                    )}
+              
+                    {/* tiny debug toggle */}
+                    <details style={{marginTop:12}}>
+                      <summary>Raw JSON</summary>
+                      <pre style={{whiteSpace:'pre-wrap'}}>{resultJson}</pre>
+                    </details>
                   </div>
                 );
               })() : (
