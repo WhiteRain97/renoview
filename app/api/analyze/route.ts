@@ -11,6 +11,13 @@ const ratelimit = new Ratelimit({
   prefix: "rvw:rl",
 });
 
+const cacheTtlSec = 6 * 60 * 60; // 6h
+
+const cacheKey = (p: {
+  zip: string; homeValue: number; budget: number; timeline: string; room?: string;
+}) =>
+  `rvw:plan:v1:${p.zip}:${Math.round(p.homeValue/50000)}:${Math.round(p.budget/5000)}:${p.timeline}:${p.room ?? ""}`;
+
 const clientIp = (req: Request) =>
   req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
   req.headers.get("x-real-ip") ??
@@ -90,6 +97,13 @@ export async function POST(req: Request) {
     if (!p.success) return NextResponse.json({ error: "Invalid input", details: p.error.flatten() }, { status: 400 });
 
     const { zip, address, homeValue, budget, timeline, room, photoBase64 } = p.data;
+
+    // ---- cache (only when no photo) ----
+    if (!photoBase64) {
+      const key = cacheKey({ zip, homeValue, budget, timeline, room });
+      const cached = await redis.get(key);
+      if (cached) return NextResponse.json(cached);
+    }
 
     // image checks (optional)
     let imagePart: { type: "image_url"; image_url: { url: string } } | null = null;
@@ -212,7 +226,12 @@ export async function POST(req: Request) {
         { status: 422 }
       );
     }
-
+    
+    // ---- save to cache (only when no photo) ----
+    if (!photoBase64) {
+      const key = cacheKey({ zip, homeValue, budget, timeline, room });
+      await redis.set(key, out.data, { ex: cacheTtlSec });
+    }
 
     return NextResponse.json(out.data);
   } catch (e) {
