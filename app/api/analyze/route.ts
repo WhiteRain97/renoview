@@ -73,6 +73,11 @@ const Priority = z.object({
 
 const Res = z.object({
   summary: z.string(),
+
+  market_insights: z.array(z.string()).default([]),   // NEW
+  room_specific: z.array(z.string()).default([]),     // NEW
+  timeline_fit: z.string().optional().default(""),    // NEW
+
   priority_actions: z.array(Priority).default([]),
   quick_wins: z.array(z.object({
     title: z.string(),
@@ -138,11 +143,14 @@ export async function POST(req: Request) {
 
     const system = [
       "You are Renoview. Return ONLY one JSON object with keys:",
-      "summary, priority_actions[], quick_wins[], defer_or_avoid[], next_steps_checklist[]",
+      "summary, market_insights[], priority_actions[], quick_wins[], room_specific[], timeline_fit, defer_or_avoid[], next_steps_checklist[]",
       "Rules: objects only (no bullet strings), numbers only (no $/%), ranges as [min,max].",
+      "Always personalize using the user's inputs (ZIP, home value, budget, timeline, room).",
+      "Ground advice in realistic, local-ish cost/value ranges for that price band; be concise and specific.",
       "Do not repeat the full address; refer to 'the property' instead.",
-      'Example: {"summary":"...","priority_actions":[{"title":"Repaint","why":"...","est_cost_range":[3500,5500],"expected_value_uplift_range":[9000,15000],"roi_range_pct":[65,200],"timeline_weeks":[2,3],"confidence":"medium","dependencies":["none"],"notes":""}],"quick_wins":[{"title":"LED bulbs","why":"...","est_cost":300,"impact":"medium"}],"defer_or_avoid":[{"title":"Full reconfig","why":"..."}],"next_steps_checklist":["Pull 3 comps"]}',
+      'Example: {"summary":"Given ~$650k value in 75022 and $25k budget, focus on a light kitchen refresh and exterior paint.","market_insights":["Homes in 75022 at $600–700k often recoup ~70–90% on cosmetic kitchen work.","Exterior paint ($3.5k–$5.5k) commonly improves curb appeal and DOM."],"priority_actions":[{"title":"Repaint kitchen cabinets","why":"Buyers in this band expect light, clean cabinets; fast, high-impact.","est_cost_range":[3500,5500],"expected_value_uplift_range":[9000,15000],"roi_range_pct":[65,200],"timeline_weeks":[2,3],"confidence":"medium","dependencies":["none"],"notes":""}],"quick_wins":[{"title":"LED 3000K bulbs","why":"Bright, neutral light photographs better.","est_cost":200,"impact":"medium"}],"room_specific":["For Kitchen: swap hardware; add soft-close hinges if time allows."],"timeline_fit":"Within 4–6 weeks, prioritize paint, lighting, hardware, minor fixes.","defer_or_avoid":[{"title":"Full reconfiguration","why":"Over budget and time."}],"next_steps_checklist":["Get 2 bids for cabinet spray (enamel, references).","Pull 3 comps within 0.5 mi and ±10% sqft."]}',
     ].join("\n");
+
 
 
 
