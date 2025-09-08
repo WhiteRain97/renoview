@@ -93,9 +93,9 @@ const ALLOWED_IMAGE_MIMES = ['image/jpeg', 'image/png', 'image/webp'];
 /* ---------------- page ---------------- */
 export default function Page() {
   // form state
-  const [zip, setZip] = useState('75022');
-  const [address, setAddress] = useState('123 Main St, Flower Mound, TX 75022');
-  const [homeValueDisplay, setHomeValueDisplay] = useState('$500,000');
+  const [zip, setZip] = useState('');
+  const [address, setAddress] = useState('');
+  const [homeValueDisplay, setHomeValueDisplay] = useState('');
   const [budgetLabel, setBudgetLabel] = useState('$25k - $45k');
   const [timeline, setTimeline] = useState('3 - 6 months');
   const [room, setRoom] = useState('Bathroom');
