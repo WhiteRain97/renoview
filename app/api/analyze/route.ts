@@ -113,6 +113,10 @@ export async function POST(req: Request) {
 
     const { zip, address, homeValue, budget, timeline, room, photoBase64 } = p.data;
 
+    const warnings:string[] = [];
+    if (budget > homeValue * 0.5) warnings.push("Budget exceeds ~50% of home value; ROI may diminish.");
+    // You could include `warnings` in the final JSON you return, or log them.
+
     // ---- cache (only when no photo) ----
     if (!photoBase64) {
       const key = cacheKey({ zip, homeValue, budget, timeline, room });
