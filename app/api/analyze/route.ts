@@ -3,7 +3,7 @@ import OpenAI from "openai";
 import { z } from "zod";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import baselines from "@/app/data/roi_baselines.json";
+import baselines from "../../data/roi_baselines.json";
 
 // ---------- Upstash (rate limit + cache) ----------
 const redis = Redis.fromEnv();
