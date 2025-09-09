@@ -1,0 +1,26 @@
+[
+  {
+    "region": "southwest",
+    "home_age": "11-30",
+    "room": "Bathroom",
+    "project_type": "Upgrade fixtures",
+    "cost_low": 3000,
+    "cost_high": 6000,
+    "roi_low_pct": 120,
+    "roi_high_pct": 200,
+    "source": "Remodeling Magazine – Cost vs. Value 2024",
+    "note": "Mid-range bath updates in SW markets recoup well; fast turnaround."
+  },
+  {
+    "region": "southwest",
+    "home_age": "11-30",
+    "room": "Bathroom",
+    "project_type": "Re-tile shower",
+    "cost_low": 5000,
+    "cost_high": 9000,
+    "roi_low_pct": 90,
+    "roi_high_pct": 160,
+    "source": "Remodeling Magazine – Cost vs. Value 2024",
+    "note": "Moisture control + modern tile boosts perceived quality."
+  }
+]
