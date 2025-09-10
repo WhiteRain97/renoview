@@ -340,7 +340,16 @@ export default function Page() {
                     {r.market_insights?.length > 0 && (
                       <>
                         <h4>Market insights</h4>
-                        <ul>{r.market_insights.map((s:string,i:number)=><li key={i}>{s}</li>)}</ul>
+                        <ul>
+                          {r.market_insights.map((item: any, i: number) => (
+                            <li key={i}>
+                              <strong>{item.project_type}</strong> — 
+                              Est. cost: ${item.est_cost_range[0].toLocaleString()}–${item.est_cost_range[1].toLocaleString()} | 
+                              ROI: {item.roi_pct_range[0]}–{item.roi_pct_range[1]}% | 
+                              Value uplift: ${item.expected_value_uplift_range[0].toLocaleString()}–${item.expected_value_uplift_range[1].toLocaleString()}
+                            </li>
+                          ))}
+                        </ul>
                       </>
                     )}
               
