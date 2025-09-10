@@ -86,7 +86,7 @@ const Res = z.object({
     est_cost_range: z.tuple([z.number(), z.number()]),
     roi_pct_range: z.tuple([z.number(), z.number()]),
     expected_value_uplift_range: z.tuple([z.number(), z.number()])
-  })).default([]),,
+  })).default([]),
   room_specific: z.array(z.string()).default([]),
   timeline_fit: z.string().optional().default(""),
   projects: z.array(ProjectRow).default([]),
