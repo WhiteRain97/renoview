@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { ScorecardRequest, ScorecardResponse } from "@/lib/scorecard/types";
+import type { ScorecardRequest, ScorecardResponse } from "../../../lib/scorecard/types";
 
 // TODO(Scorecard): implement ROI_score based on cost→value baseline,
 // adjust by sell_timeline and budget fit, normalize to 0-10.
