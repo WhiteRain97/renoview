@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from "react";
-import { ScoreGauge } from "@/components/scorecard/ScoreGauge";
-import { MiniFactorCircle } from "@/components/scorecard/MiniFactorCircle";
+import { ScoreGauge } from "../../components/scorecard/ScoreGauge";
+import { MiniFactorCircle } from "../../components/scorecard/MiniFactorCircle";
 
 const STEPS = ["Your Home", "Priorities", "Remodel"];
 
