@@ -81,7 +81,12 @@ const ProjectRow = z.object({
 
 const Res = z.object({
   summary: z.string(),
-  market_insights: z.array(z.string()).default([]),
+  market_insights: z.array(z.object({
+    project_type: z.string(),
+    est_cost_range: z.tuple([z.number(), z.number()]),
+    roi_pct_range: z.tuple([z.number(), z.number()]),
+    expected_value_uplift_range: z.tuple([z.number(), z.number()])
+  })).default([]),,
   room_specific: z.array(z.string()).default([]),
   timeline_fit: z.string().optional().default(""),
   projects: z.array(ProjectRow).default([]),
