@@ -90,11 +90,27 @@ const Res = z.object({
   room_specific: z.array(z.string()).default([]),
   timeline_fit: z.string().optional().default(""),
   projects: z.array(ProjectRow).default([]),
-  priority_actions: z.array(Priority).default([]),
-  quick_wins: z.array(z.object({
-    title: z.string(), why: z.string(), est_cost: NumNN, impact: z.enum(["low","medium","high"]),
+  priority_actions: z.array(z.object({
+    title: z.string(),
+    why: z.string(),
+    est_cost_range: z.tuple([z.number(), z.number()]),
+    expected_value_uplift_range: z.tuple([z.number(), z.number()]),
+    roi_range_pct: z.tuple([z.number(), z.number()]),
+    timeline_weeks: z.tuple([z.number(), z.number()]),
+    confidence: z.enum(["low","medium","high"]),
+    dependencies: z.array(z.string()).default([]),
+    notes: z.string().optional().default(""),
   })).default([]),
-  defer_or_avoid: z.array(z.object({ title: z.string(), why: z.string() })).default([]),
+  quick_wins: z.array(z.object({
+    title: z.string(),
+    why: z.string(),
+    est_cost: z.number(),
+    impact: z.enum(["low","medium","high"])
+  })).default([]),
+  defer_or_avoid: z.array(z.object({
+    title: z.string(),
+    why: z.string()
+  })).default([]),
   next_steps_checklist: z.array(z.string()).default([]),
 });
 
