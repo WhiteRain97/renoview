@@ -24,11 +24,11 @@ import { ScorecardRequest, Confidence, ScorecardResponse } from "@/types/scoreca
 };*/
 
 // Response schema
-type Confidence = {
+/*type Confidence = {
   range_low: number;
   range_high: number;
   level: "low" | "medium" | "high";
-};
+};*/
 
 type ScorecardResponse = {
   overall_score: number;
