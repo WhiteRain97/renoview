@@ -52,7 +52,11 @@ export async function POST(req: NextRequest) {
     const weights = normalizeWeights(body.weights);
 
     // Load region baseline for scoring (stub)
-    const region = await getCostValueBaseline(body.zip_or_city);
+    const region = await getCostValueBaseline(
+      body.zip_or_city,
+      body.remodel.room,
+      body.remodel.subtype
+    );
 
     // Calculate scores (stub)
     const result = await calcScores({
