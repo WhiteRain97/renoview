@@ -35,11 +35,11 @@ type ScorecardResponse = {
   weights: ScorecardRequest['weights'];
   signals: string[];
   recommendation: string;
-  confidence: {
-    range_low: number;
-    range_high: number;
-    level: "low" | "medium" | "high";
-  };
+  confidence: result.confidence ?? { 
+  range_low: result.overall_score - 0.8, 
+  range_high: result.overall_score + 0.6, 
+  level: "medium" as "medium"
+},
   sources: string[];
   share_url: string;
 };
