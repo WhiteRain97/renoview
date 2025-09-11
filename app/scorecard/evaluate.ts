@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { calcScores } from "@/lib/scoring/factors";
-import { normalizeWeights } from "@/lib/scoring/normalize";
-import { getRegionBaseline } from "@/lib/markets/cost_value";
+import { calcScores } from "../../lib/scoring/factors";
+import { normalizeWeights } from "../../lib/scoring/normalize";
+import { getRegionBaseline } from "../../lib/markets/cost_value";
 
 // Request schema
 type ScorecardRequest = {
