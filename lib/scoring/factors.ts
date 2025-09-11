@@ -1,4 +1,4 @@
-import { ScorecardRequest } from "../../../app/api/scorecard/evaluate";
+import { ScorecardRequest } from "@/app/api/scorecard/evaluate";
 import { clamp } from "./normalize";
 
 // Stub: region baseline info type
