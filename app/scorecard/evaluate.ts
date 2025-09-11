@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { calcScores } from "../../lib/scoring/factors";
 import { normalizeWeights } from "../../lib/scoring/normalize";
 import { getCostValueBaseline } from "../../lib/markets/cost_value";
+import { ScorecardRequest, Confidence, ScorecardResponse } from "@/types/scorecard";
 
 // Request schema
 type ScorecardRequest = {
