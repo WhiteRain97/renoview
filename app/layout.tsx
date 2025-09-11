@@ -1,3 +1,5 @@
+import './globals.css';
+
 export const metadata = {
   title: 'Renoview',
   description: 'Remodel ROI tool',
