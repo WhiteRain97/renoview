@@ -5,7 +5,7 @@ import { getCostValueBaseline } from "../../lib/markets/cost_value";
 import { ScorecardRequest, Confidence, ScorecardResponse } from "@/types/scorecard";
 
 // Request schema
-type ScorecardRequest = {
+/*type ScorecardRequest = {
   home_value_range: [number, number];
   zip_or_city: string;
   sell_timeline: "<1y" | "1-3y" | "3-5y" | "5+";
@@ -21,7 +21,7 @@ type ScorecardRequest = {
     subtype?: string;
     free_text?: string;
   };
-};
+};*/
 
 // Response schema
 type Confidence = {
