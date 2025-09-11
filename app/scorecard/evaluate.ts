@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
         range_low: result.overall_score - 0.8,
         range_high: result.overall_score + 0.6,
         level: "medium"
-      } as { range_low: number; range_high: number; level: "low" | "medium" | "high"; }),
+      } as { range_low: number; range_high: number; level: "low" | "medium" | "high" }),
       sources: result.sources ?? ["Remodeling Cost vs. Value (region)", "Internal comps"],
       band: result.band ?? "recommended",
       share_url: `/scorecard/abc123`,
