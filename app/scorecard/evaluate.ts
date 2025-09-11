@@ -51,6 +51,13 @@ export async function POST(req: NextRequest) {
     // Normalize weights
     const weights = normalizeWeights(body.weights);
 
+    const typedWeights = {
+      roi: weights.roi,
+      lifestyle: weights.lifestyle,
+      disruption: weights.disruption,
+      buyer_appeal: weights.buyer_appeal,
+    };
+    
     // Load region baseline for scoring (stub)
     const region = await getCostValueBaseline(
       body.zip_or_city,
@@ -68,7 +75,7 @@ export async function POST(req: NextRequest) {
     // Example signals, sources, band, recommendation, confidence
     const response: ScorecardResponse = {
       ...result,
-      weights,
+      weights: typedWeights,
       signals: result.signals ?? [],
       recommendation: result.recommendation ?? "Strong candidate - get quotes",
       confidence: result.confidence ?? { range_low: result.overall_score - 0.8, range_high: result.overall_score + 0.6, level: "medium" },
