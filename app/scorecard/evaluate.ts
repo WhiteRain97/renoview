@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     const regionBaseline = {
       cost_value_ratio: region.roi_pct / 100,
       comps_trend: 0,
-      typical_budget: [budgetMin, budgetMax],
+      typical_budget: [budgetMin, budgetMax] as [number, number], // enforce tuple
     };
 
     // Calculate scores (stub)
