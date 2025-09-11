@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     // Calculate scores (stub)
     const result = await calcScores({
       ...body,
-      weights,
+      weights: typedWeights,
       region,
     });
 
