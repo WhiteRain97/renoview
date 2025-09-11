@@ -85,11 +85,13 @@ export async function POST(req: NextRequest) {
     );
 
     // Patch: convert CostValueBaseline to RegionBaseline
+    const budgetMin = Math.round(region.cost * 0.9);
+    const budgetMax = Math.round(region.cost * 1.1);
+    
     const regionBaseline = {
-      cost_value_ratio: region.roi_pct / 100,         // Use existing field, normalized to 0-1
-      comps_trend: 0,                                 // TODO: replace with real data if available
-      typical_budget: region.cost,                    // Use cost as a stand-in
-      // ...add any other required fields if needed
+      cost_value_ratio: region.roi_pct / 100,
+      comps_trend: 0,
+      typical_budget: [budgetMin, budgetMax],
     };
 
     // Calculate scores (stub)
