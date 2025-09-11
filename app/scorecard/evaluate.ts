@@ -30,7 +30,7 @@ import { ScorecardRequest, Confidence, ScorecardResponse } from "@/types/scoreca
   level: "low" | "medium" | "high";
 };*/
 
-type ScorecardResponse = {
+/*type ScorecardResponse = {
   overall_score: number;
   band: "not recommended" | "possible" | "recommended" | "strongly recommended";
   factors: {
@@ -45,7 +45,7 @@ type ScorecardResponse = {
   confidence: Confidence;
   sources: string[];
   share_url: string;
-};
+};*/
 
 // Helper: always returns the correct Confidence type
 function toConfidence(obj: any, overall_score: number): Confidence {
