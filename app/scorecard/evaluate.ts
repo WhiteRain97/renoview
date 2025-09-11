@@ -35,11 +35,11 @@ type ScorecardResponse = {
   weights: ScorecardRequest['weights'];
   signals: string[];
   recommendation: string;
-  confidence: result.confidence ?? { 
-  range_low: result.overall_score - 0.8, 
-  range_high: result.overall_score + 0.6, 
-  level: "medium" as "medium"
-},
+  confidence: {
+    range_low: number;
+    range_high: number;
+    level: "low" | "medium" | "high";
+  };
   sources: string[];
   share_url: string;
 };
@@ -50,7 +50,6 @@ export async function POST(req: NextRequest) {
 
     // Normalize weights
     const weights = normalizeWeights(body.weights);
-
     const typedWeights = {
       roi: weights.roi,
       lifestyle: weights.lifestyle,
@@ -72,13 +71,17 @@ export async function POST(req: NextRequest) {
       region,
     });
 
-    // Example signals, sources, band, recommendation, confidence
+    // Build response with type-safe confidence fallback
     const response: ScorecardResponse = {
       ...result,
       weights: typedWeights,
       signals: result.signals ?? [],
       recommendation: result.recommendation ?? "Strong candidate - get quotes",
-      confidence: result.confidence ?? { range_low: result.overall_score - 0.8, range_high: result.overall_score + 0.6, level: "medium" },
+      confidence: result.confidence ?? { 
+        range_low: result.overall_score - 0.8, 
+        range_high: result.overall_score + 0.6, 
+        level: "medium"
+      },
       sources: result.sources ?? ["Remodeling Cost vs. Value (region)", "Internal comps"],
       band: result.band ?? "recommended",
       share_url: `/scorecard/abc123`, // Generate real share URL in prod
