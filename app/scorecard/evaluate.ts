@@ -23,6 +23,12 @@ type ScorecardRequest = {
 };
 
 // Response schema
+type Confidence = {
+  range_low: number;
+  range_high: number;
+  level: "low" | "medium" | "high";
+};
+
 type ScorecardResponse = {
   overall_score: number;
   band: "not recommended" | "possible" | "recommended" | "strongly recommended";
@@ -35,14 +41,27 @@ type ScorecardResponse = {
   weights: ScorecardRequest['weights'];
   signals: string[];
   recommendation: string;
-  confidence: {
-    range_low: number;
-    range_high: number;
-    level: "low" | "medium" | "high";
-  };
+  confidence: Confidence;
   sources: string[];
   share_url: string;
 };
+
+// Helper: always returns the correct Confidence type
+function toConfidence(obj: any, overall_score: number): Confidence {
+  if (
+    obj &&
+    typeof obj.range_low === "number" &&
+    typeof obj.range_high === "number" &&
+    (obj.level === "low" || obj.level === "medium" || obj.level === "high")
+  ) {
+    return obj;
+  }
+  return {
+    range_low: overall_score - 0.8,
+    range_high: overall_score + 0.6,
+    level: "medium"
+  };
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -71,20 +90,16 @@ export async function POST(req: NextRequest) {
       region,
     });
 
-    // Build response with type-safe confidence fallback
+    // Build response with safe confidence type
     const response: ScorecardResponse = {
       ...result,
       weights: typedWeights,
       signals: result.signals ?? [],
       recommendation: result.recommendation ?? "Strong candidate - get quotes",
-      confidence: result.confidence ?? ({
-        range_low: result.overall_score - 0.8,
-        range_high: result.overall_score + 0.6,
-        level: "medium"
-      } as { range_low: number; range_high: number; level: "low" | "medium" | "high" }),
+      confidence: toConfidence(result.confidence, result.overall_score),
       sources: result.sources ?? ["Remodeling Cost vs. Value (region)", "Internal comps"],
       band: result.band ?? "recommended",
-      share_url: `/scorecard/abc123`,
+      share_url: `/scorecard/abc123`, // Generate real share URL in prod
     };
 
     return NextResponse.json(response, { status: 200 });
