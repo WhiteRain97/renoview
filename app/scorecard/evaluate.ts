@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { calcScores } from "../../lib/scoring/factors";
 import { normalizeWeights } from "../../lib/scoring/normalize";
-import { getRegionBaseline } from "../../lib/markets/cost_value";
+import { getCostValueBaseline } from "../../lib/markets/cost_value";
 
 // Request schema
 type ScorecardRequest = {
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     const weights = normalizeWeights(body.weights);
 
     // Load region baseline for scoring (stub)
-    const region = await getRegionBaseline(body.zip_or_city);
+    const region = await getCostValueBaseline(body.zip_or_city);
 
     // Calculate scores (stub)
     const result = await calcScores({
