@@ -84,11 +84,19 @@ export async function POST(req: NextRequest) {
       body.remodel.subtype
     );
 
+    // Patch: convert CostValueBaseline to RegionBaseline
+    const regionBaseline = {
+      cost_value_ratio: region.roi_pct / 100,         // Use existing field, normalized to 0-1
+      comps_trend: 0,                                 // TODO: replace with real data if available
+      typical_budget: region.cost,                    // Use cost as a stand-in
+      // ...add any other required fields if needed
+    };
+
     // Calculate scores (stub)
     const result = await calcScores({
       ...body,
       weights: typedWeights,
-      region,
+      region: regionBaseline,
     });
 
     // Build response with safe confidence type
