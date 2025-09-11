@@ -59,6 +59,9 @@ export default function ScorecardPage() {
         <section>
           <h2>Priorities</h2>
           {/* Render sliders for weights here */}
+          <div className="bg-blue-500 text-white p-4">
+            Tailwind is working!
+          </div>
           <div>
             <label>ROI Weight</label>
             <input type="number" value={weights.roi} step={0.01} min={0} max={1}
