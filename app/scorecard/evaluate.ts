@@ -80,11 +80,11 @@ export async function POST(req: NextRequest) {
       confidence: result.confidence ?? { 
         range_low: result.overall_score - 0.8, 
         range_high: result.overall_score + 0.6, 
-        level: "medium"
+        level: "medium" as "medium"
       },
       sources: result.sources ?? ["Remodeling Cost vs. Value (region)", "Internal comps"],
       band: result.band ?? "recommended",
-      share_url: `/scorecard/abc123`, // Generate real share URL in prod
+      share_url: `/scorecard/abc123`,
     };
 
     return NextResponse.json(response, { status: 200 });
