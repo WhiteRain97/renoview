@@ -1,4 +1,3 @@
-import { ScorecardRequest } from "@/app/api/scorecard/evaluate";
 import { clamp } from "./normalize";
 import { ScorecardRequest, Confidence, ScorecardResponse } from "@/types/scorecard";
 
