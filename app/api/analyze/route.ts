@@ -47,15 +47,14 @@ const Address = z
 
 const Req = z.object({
   zip: z.string().regex(/^\d{5}$/, "ZIP must be 5 digits").refine(z => z !== "00000", "invalid ZIP"),
-  address: Address,
-  homeValue: NumNN.refine(n => n >= 40_000 && n <= 10_000_000, "homeValue out of range"),
-  budget: NumNN.refine(n => n <= 2_000_000, "budget too large"),
-  timeline: z.enum(TIMELINES),
-  room: z.enum(ROOMS).optional().default("Other"),
+  address: z.string().max(120).optional().default(""),
+  homeValue: z.number().min(40000).max(10000000),
+  budget: z.number().max(2000000),
+  timeline: z.enum(["ASAP", "1 - 3 months", "3 - 6 months"]),
+  room: z.enum(["Kitchen","Bathroom","Exterior","Whole-home","Other"]).optional().default("Other"),
+  homeAge: z.string().optional(),
+  region: z.string().optional(),
   photoBase64: z.string().nullable().optional(),
-  // (optional for now; read from raw JSON with defaults if omitted)
-  region: z.string().optional(),     // e.g., "southwest"
-  homeAge: z.string().optional(),    // e.g., "11-30"
 });
 
 const Priority = z.object({
